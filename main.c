@@ -46,9 +46,28 @@ int main(void)
     }
 
 
+    listen(fd, 10);
 
+    struct sockaddr_in client_addr;
+    bzero(&client_addr, sizeof(client_addr));
+    int len = sizeof(client_addr);
 
+    for(;;)
+    {
+        int conn_fd = accept(fd, (struct sockaddr *) &client_addr, &len);
+        if(0 == fork())
+        {
+            /*child process*/
+            printf("client[%s]:%dconnect success!!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+            close(conn_fd);
 
+        }
+        else
+        {
+            /*father process*/
+            close(conn_fd);
+        }
+    }
     close(fd);
     return 0;
 }
