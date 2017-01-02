@@ -30,17 +30,18 @@ int main(void)
     bzero(&server_addr, sizeof(server_addr));
 
     server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = htonl(0);
+    //server_addr.sin_addr.s_addr = htonl(0);
+    inet_aton("127.0.0.1", &server_addr.sin_addr );
     server_addr.sin_port = htons(9000);
 
     int bind_result = bind(fd, (struct sockaddr * ) &server_addr, sizeof(server_addr));
     if(0 == bind_result)
     {
-        printf("绑定[%s]:%d成功\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
+        printf("绑定[%s]:%d 成功\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
     }
     else
     {
-        printf("绑定[%s]:%d失败\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
+        printf("绑定[%s]:%d 失败\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
         printf("错误码%d\n", bind_result);
         server_exit();
     }
@@ -58,7 +59,7 @@ int main(void)
         if(0 == fork())
         {
             /*child process*/
-            printf("client[%s]:%dconnect success!!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+            printf("client[%s]:%d connect success!!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             close(conn_fd);
 
         }
