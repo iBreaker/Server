@@ -13,7 +13,7 @@ void server_exit(void){
 }
 
 int main(void){
-    int fd = socket(AF_INET , SOCK_STREAM , 0);
+    int fd = socket(AF_INET , SOCK_STREAM , 0); //创建套接字
     if( -1 == fd ){
         printf("get fd error\n");
         server_exit();
@@ -61,3 +61,5 @@ int main(void){
     close(fd);
     return 0;
 }
+
+
