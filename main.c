@@ -7,22 +7,18 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 
-void server_exit(void)
-{
+void server_exit(void){
     printf("server退出\n");
     exit(-1);
 }
 
-int main(void)
-{
+int main(void){
     int fd = socket(AF_INET , SOCK_STREAM , 0);
-    if( -1 == fd )
-    {
+    if( -1 == fd ){
         printf("get fd error\n");
         server_exit();
     }
-    else
-    {
+    else{
         printf("fd is %d\n", fd);
     }
 
@@ -35,36 +31,29 @@ int main(void)
     server_addr.sin_port = htons(9000);
 
     int bind_result = bind(fd, (struct sockaddr * ) &server_addr, sizeof(server_addr));
-    if(0 == bind_result)
-    {
+    if(0 == bind_result){
         printf("绑定[%s]:%d 成功\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
     }
-    else
-    {
+    else{
         printf("绑定[%s]:%d 失败\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
         printf("错误码%d\n", bind_result);
         server_exit();
     }
 
-
     listen(fd, 10);
 
     struct sockaddr_in client_addr;
     bzero(&client_addr, sizeof(client_addr));
-    int len = sizeof(client_addr);
+    socklen_t len = sizeof(client_addr);
 
-    for(;;)
-    {
+    for(;;){
         int conn_fd = accept(fd, (struct sockaddr *) &client_addr, &len);
-        if(0 == fork())
-        {
+        if(0 == fork()){
             /*child process*/
             printf("client[%s]:%d connect success!!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             close(conn_fd);
-
         }
-        else
-        {
+        else{
             /*father process*/
             close(conn_fd);
         }
