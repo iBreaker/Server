@@ -50,7 +50,7 @@ int main(void){
         int conn_fd = accept(fd, (struct sockaddr *) &client_addr, &len);
         if(0 == fork()){
             /*child process*/
-            printf("client[%s]:%d connect success!!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+            printf("client[%s]:%d connect success!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             close(conn_fd);
         }
         else{
