@@ -14,7 +14,8 @@ void log_printf(DEBUG_LEVEL debug_level, const char * fmt, ...){
 
     va_list vl;
     va_start(vl, fmt);
-    printf(fmt, vl);
+    vprintf(fmt, vl);
+    va_end(vl);
     return;
 }
 
