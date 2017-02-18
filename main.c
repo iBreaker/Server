@@ -6,20 +6,21 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
+#include "log.h"
 
 void server_exit(void){
-    printf("server退出\n");
+    log_printf(INFO, "server退出\n");
     exit(-1);
 }
 
 int main(void){
     int fd = socket(AF_INET , SOCK_STREAM , 0); //创建套接字
     if( -1 == fd ){
-        printf("get fd error\n");
+        log_printf(FATAL, "get fd error\n");
         server_exit();
     }
     else{
-        printf("fd is %d\n", fd);
+        log_printf(INFO, "fd is %d\n", fd);
     }
 
     struct sockaddr_in server_addr;
@@ -32,11 +33,11 @@ int main(void){
 
     int bind_result = bind(fd, (struct sockaddr * ) &server_addr, sizeof(server_addr));
     if(0 == bind_result){
-        printf("绑定[%s]:%d 成功\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
+        log_printf(INFO, "绑定[%s]:%d 成功\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
     }
     else{
-        printf("绑定[%s]:%d 失败\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
-        printf("错误码%d\n", bind_result);
+        log_printf(FATAL, "绑定[%s]:%d 失败\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
+        log_printf(FATAL, "错误码%d\n", bind_result);
         server_exit();
     }
 
@@ -50,7 +51,7 @@ int main(void){
         int conn_fd = accept(fd, (struct sockaddr *) &client_addr, &len);
         if(0 == fork()){
             /*child process*/
-            printf("client[%s]:%d connect success!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+            log_printf(DEBUG, "client[%s]:%d connect success!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             close(conn_fd);
         }
         else{
